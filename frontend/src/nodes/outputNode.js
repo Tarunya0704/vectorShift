@@ -1,47 +1,82 @@
-// outputNode.js
+import React, { useState } from 'react';
+import BaseNode from '../components/BaseNode';
 
-import { useState } from 'react';
-import { Handle, Position } from 'reactflow';
-
-export const OutputNode = ({ id, data }) => {
-  const [currName, setCurrName] = useState(data?.outputName || id.replace('customOutput-', 'output_'));
-  const [outputType, setOutputType] = useState(data.outputType || 'Text');
+const OutputNode = ({ id, data, onDataChange }) => {
+  const [outputName, setOutputName] = useState(data?.outputName || id.replace('customOutput-', 'output_'));
+  const [outputType, setOutputType] = useState(data?.outputType || 'Text');
 
   const handleNameChange = (e) => {
-    setCurrName(e.target.value);
+    const newName = e.target.value;
+    setOutputName(newName);
+    if (onDataChange) {
+      onDataChange({ ...data, outputName: newName });
+    }
   };
 
   const handleTypeChange = (e) => {
-    setOutputType(e.target.value);
+    const newType = e.target.value;
+    setOutputType(newType);
+    if (onDataChange) {
+      onDataChange({ ...data, outputType: newType });
+    }
   };
 
+  const inputs = [{
+    id: 'value',
+    label: 'Input',
+    color: '#ef4444'
+  }];
+
   return (
-    <div style={{width: 200, height: 80, border: '1px solid black'}}>
-      <Handle
-        type="target"
-        position={Position.Left}
-        id={`${id}-value`}
-      />
-      <div>
-        <span>Output</span>
-      </div>
-      <div>
-        <label>
+    <BaseNode
+      id={id}
+      data={data}
+      title="Output"
+      inputs={inputs}
+      backgroundColor="#fef2f2"
+      borderColor="#ef4444"
+      titleColor="#dc2626"
+      onDataChange={onDataChange}
+    >
+      <div className="output-node-content">
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '500' }}>
           Name:
-          <input 
-            type="text" 
-            value={currName} 
-            onChange={handleNameChange} 
-          />
         </label>
-        <label>
+        <input
+          type="text"
+          value={outputName}
+          onChange={handleNameChange}
+          style={{
+            width: '100%',
+            padding: '6px 8px',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            fontSize: '13px',
+            marginBottom: '12px'
+          }}
+        />
+        
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '500' }}>
           Type:
-          <select value={outputType} onChange={handleTypeChange}>
-            <option value="Text">Text</option>
-            <option value="File">Image</option>
-          </select>
         </label>
+        <select
+          value={outputType}
+          onChange={handleTypeChange}
+          style={{
+            width: '100%',
+            padding: '6px 8px',
+            border: '1px solid #d1d5db',
+            borderRadius: '4px',
+            fontSize: '13px'
+          }}
+        >
+          <option value="Text">Text</option>
+          <option value="File">File</option>
+          <option value="Number">Number</option>
+          <option value="Image">Image</option>
+        </select>
       </div>
-    </div>
+    </BaseNode>
   );
-}
+};
+export default OutputNode;
