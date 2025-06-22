@@ -1,4 +1,3 @@
-// textNode.js - Replace existing text node in /frontend/src/nodes/
 import React, { useState, useEffect, useRef } from 'react';
 import BaseNode from '../components/BaseNode';
 
@@ -32,14 +31,9 @@ const TextNode = ({ id, data, onDataChange }) => {
   const autoResize = () => {
     if (textareaRef.current) {
       const textarea = textareaRef.current;
-      
-      // Reset height to recalculate
       textarea.style.height = 'auto';
-      
-      // Calculate new dimensions
       const newHeight = Math.max(100, textarea.scrollHeight + 20);
       const newWidth = Math.max(200, Math.min(400, textarea.value.length * 8 + 40));
-      
       setDimensions({
         width: newWidth,
         height: newHeight
@@ -51,15 +45,9 @@ const TextNode = ({ id, data, onDataChange }) => {
   const handleTextChange = (e) => {
     const newText = e.target.value;
     setText(newText);
-    
-    // Extract variables
     const newVariables = extractVariables(newText);
     setVariables(newVariables);
-    
-    // Auto-resize
     autoResize();
-    
-    // Update data
     if (onDataChange) {
       onDataChange({
         ...data,
@@ -103,7 +91,7 @@ const TextNode = ({ id, data, onDataChange }) => {
       titleColor="#92400e"
       onDataChange={onDataChange}
     >
-      <div className="text-node-content">
+      <div className="text-node-content" style={{ padding: '8px' }}>
         <textarea
           ref={textareaRef}
           value={text}
@@ -120,7 +108,9 @@ const TextNode = ({ id, data, onDataChange }) => {
             resize: 'none',
             outline: 'none',
             backgroundColor: '#ffffff',
-            lineHeight: '1.4'
+            color: '#000000',
+            lineHeight: '1.4',
+            boxSizing: 'border-box'
           }}
           onInput={autoResize}
         />
@@ -132,7 +122,8 @@ const TextNode = ({ id, data, onDataChange }) => {
             color: '#6b7280',
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '4px'
+            gap: '4px',
+            alignItems: 'center'
           }}>
             <span>Variables:</span>
             {variables.map(variable => (
